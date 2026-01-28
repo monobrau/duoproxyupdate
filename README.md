@@ -6,6 +6,16 @@ Quick shortcuts and automation tools for Duo Authentication Proxy upgrade tasks,
 
 ### Recommended: PowerShell Version (SentinelOne/EDR Safe)
 
+#### Option 1: Run Directly from GitHub (Easiest)
+
+Copy and paste this into PowerShell on the remote server:
+
+```powershell
+powershell.exe -ExecutionPolicy Bypass -Command "iwr https://raw.githubusercontent.com/monobrau/duoproxyupdate/main/DuoProxyUpgrade.ps1 -UseBasicParsing | Select-Object -ExpandProperty Content | iex"
+```
+
+#### Option 2: Download and Run
+
 1. **Transfer** `DuoProxyUpgrade.ps1` to remote server via ScreenConnect
 2. **Run**: `powershell.exe -ExecutionPolicy Bypass -File "DuoProxyUpgrade.ps1"`
    - Or double-click `Run-DuoHelper.bat`
@@ -13,6 +23,8 @@ Quick shortcuts and automation tools for Duo Authentication Proxy upgrade tasks,
 4. **Close** window when done
 
 **Why PowerShell?** Native Windows, won't trigger SentinelOne/EDR alerts, no allowlisting needed.
+
+See `RUN_FROM_WEB.md` for more details on running from GitHub.
 
 ## Features
 
