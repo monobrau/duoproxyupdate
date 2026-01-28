@@ -1,0 +1,50 @@
+═══════════════════════════════════════════════════════════════
+  DUO PROXY UPGRADE - SCREENCONNECT SESSION CHECKLIST
+═══════════════════════════════════════════════════════════════
+
+BEFORE STARTING:
+───────────────────────────────────────────────────────────────
+☐ Compiled DuoProxyUpgrade.exe on local machine
+☐ Connected to target server via ScreenConnect
+☐ Transferred DuoProxyUpgrade.exe to server Desktop
+☐ Started DuoProxyUpgrade.exe on remote server
+☐ Verified tray icon appears in remote session
+
+PRE-UPGRADE:
+───────────────────────────────────────────────────────────────
+☐ Press F3 - Check current Duo Proxy version
+☐ Press F5 - Backup config file (verify on Desktop)
+☐ Press F4 - Open Duo downloads page
+☐ Note: Backup filename = authproxy_YYYYMMDDHHMMSS.cfg
+
+UPGRADE PROCESS:
+───────────────────────────────────────────────────────────────
+☐ Download latest installer from Duo page
+☐ Run installer (use defaults)
+☐ REBOOT if prompted (critical - prevents rollback!)
+
+POST-UPGRADE:
+───────────────────────────────────────────────────────────────
+☐ Press F3 - Verify new version installed
+☐ Press F5 - Confirm backup still exists
+☐ Verify service is running
+☐ Update tracking spreadsheet with version + date
+
+CLEANUP:
+───────────────────────────────────────────────────────────────
+☐ Right-click tray icon → Exit DuoProxyUpgrade.exe
+☐ Keep backup file on Desktop (for rollback if needed)
+☐ Optional: Delete DuoProxyUpgrade.exe or keep for future use
+
+═══════════════════════════════════════════════════════════════
+
+QUICK REFERENCE (Keep This Visible):
+───────────────────────────────────────────────────────────────
+F1  →  Old Config Path (Pre 5.6.0)
+F2  →  New Config Path (5.6.0+)
+F3  →  Duo Proxy Manager
+F4  →  Duo Downloads Page
+F5  →  Backup Config (Auto-detect)
+F6  →  Open Both Config Paths
+
+═══════════════════════════════════════════════════════════════

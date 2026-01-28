@@ -1,0 +1,28 @@
+# Compiled executables
+*.exe
+
+# AutoHotkey compiled files
+*.ahk.bak
+
+# Windows
+Thumbs.db
+Desktop.ini
+*.lnk
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.log
+
+# Backup files
+*.bak
+*_backup.*
+
+# OS files
+.DS_Store

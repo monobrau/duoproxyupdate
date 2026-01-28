@@ -1,0 +1,48 @@
+═══════════════════════════════════════════════════════════════
+  DUO PROXY UPGRADE - AUTOHOTKEY QUICK REFERENCE
+═══════════════════════════════════════════════════════════════
+
+HOTKEYS:
+───────────────────────────────────────────────────────────────
+F1  →  Open Old Config Path (Pre 5.6.0)
+F2  →  Open New Config Path (5.6.0+)
+F3  →  Open Duo Proxy Manager
+F4  →  Open Duo Downloads Page
+F5  →  Backup Config File (Auto-detect path)
+F6  →  Open Both Config Paths
+
+Ctrl+Shift+D  →  Open Duo Downloads
+Ctrl+Shift+B  →  Quick Backup Config
+
+───────────────────────────────────────────────────────────────
+
+TYPICAL WORKFLOW:
+───────────────────────────────────────────────────────────────
+1. Press F3 to check current version
+2. Press F5 to backup config BEFORE upgrade
+3. Press F4 to open downloads page
+4. After upgrade, press F3 to verify new version
+5. Press F5 again to confirm backup exists
+
+───────────────────────────────────────────────────────────────
+
+CONFIG PATHS:
+───────────────────────────────────────────────────────────────
+Old (Pre 5.6.0):
+  C:\Program Files (x86)\Duo Security Authentication Proxy\conf
+
+New (5.6.0+):
+  C:\Program Files\Duo Security Authentication Proxy\conf
+
+Config File: authproxy.cfg
+
+───────────────────────────────────────────────────────────────
+
+TRAY MENU:
+───────────────────────────────────────────────────────────────
+Right-click system tray icon for:
+  • Show Hotkeys
+  • About
+  • Exit
+
+═══════════════════════════════════════════════════════════════
