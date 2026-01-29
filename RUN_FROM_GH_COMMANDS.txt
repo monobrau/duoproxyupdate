@@ -1,0 +1,21 @@
+========================================
+Duo Proxy Upgrade Helper
+Three Ways to Run Directly from GitHub
+========================================
+
+1. CMD / Command Prompt (Batch):
+   powershell.exe -ExecutionPolicy Bypass -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $f = Join-Path $env:TEMP 'DuoProxyUpgrade.ps1'; Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/monobrau/duoproxyupdate/main/DuoProxyUpgrade.ps1' -OutFile $f -UseBasicParsing; powershell.exe -ExecutionPolicy Bypass -File $f"
+
+2. PowerShell (Download then Execute):
+   powershell.exe -ExecutionPolicy Bypass -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $f = Join-Path $env:TEMP 'DuoProxyUpgrade.ps1'; Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/monobrau/duoproxyupdate/main/DuoProxyUpgrade.ps1' -OutFile $f -UseBasicParsing; powershell.exe -ExecutionPolicy Bypass -File $f"
+
+3. PowerShell (One-Liner - Execute in Memory):
+   powershell.exe -ExecutionPolicy Bypass -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/monobrau/duoproxyupdate/main/DuoProxyUpgrade.ps1' -UseBasicParsing | Select-Object -ExpandProperty Content | Invoke-Expression"
+
+========================================
+Notes:
+- All commands require the repository to be PUBLIC
+- Command 1 & 2: Download to temp folder then execute (more reliable)
+- Command 3: Execute directly in memory (faster, but may have issues with complex scripts)
+- Replace 'main' with your branch name if using a different branch
+========================================

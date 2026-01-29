@@ -12,11 +12,24 @@ Quick shortcuts and automation tools for Duo Authentication Proxy upgrade tasks,
 
 **Note:** This only works if the repository is **public**. For private repos, use Option 2 or clone the repo first.
 
-Copy and paste this into PowerShell on the remote server:
+**Three ways to run:**
 
-```powershell
-powershell.exe -ExecutionPolicy Bypass -Command "iwr https://raw.githubusercontent.com/monobrau/duoproxyupdate/main/DuoProxyUpgrade.ps1 -UseBasicParsing | Select-Object -ExpandProperty Content | iex"
-```
+1. **CMD / Command Prompt:**
+   ```cmd
+   powershell.exe -ExecutionPolicy Bypass -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $f = Join-Path $env:TEMP 'DuoProxyUpgrade.ps1'; Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/monobrau/duoproxyupdate/main/DuoProxyUpgrade.ps1' -OutFile $f -UseBasicParsing; powershell.exe -ExecutionPolicy Bypass -File $f"
+   ```
+
+2. **PowerShell (Download then Execute - Recommended):**
+   ```powershell
+   powershell.exe -ExecutionPolicy Bypass -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $f = Join-Path $env:TEMP 'DuoProxyUpgrade.ps1'; Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/monobrau/duoproxyupdate/main/DuoProxyUpgrade.ps1' -OutFile $f -UseBasicParsing; powershell.exe -ExecutionPolicy Bypass -File $f"
+   ```
+
+3. **PowerShell (One-Liner - Execute in Memory):**
+   ```powershell
+   powershell.exe -ExecutionPolicy Bypass -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/monobrau/duoproxyupdate/main/DuoProxyUpgrade.ps1' -UseBasicParsing | Select-Object -ExpandProperty Content | Invoke-Expression"
+   ```
+
+**Note:** Commands 1 & 2 download to temp folder then execute (more reliable). Command 3 executes directly in memory (faster but may have issues with complex scripts).
 
 #### Option 2: Download and Run
 
