@@ -216,6 +216,9 @@ function Open-DuoDownloads {
  }
 
  # Verify file was downloaded and check size
+ # Wait a moment for file handle to be released after download completes
+ Start-Sleep -Milliseconds 1000
+ 
  if (-not (Test-Path $fullPath)) {
  throw "Download failed - file not found at $fullPath"
  }
@@ -229,11 +232,12 @@ function Open-DuoDownloads {
  throw "Downloaded file size ($actualSizeMB MB) exceeds maximum allowed size ($maxFileSizeMB MB). File deleted for safety."
  }
 
- # Check if file size is reasonable for Duo installer (typically 15-30 MB)
- # If it's way too large (like 35+ MB), something is wrong
+ # Check if file size is reasonable for Duo installer (typically 15-50 MB)
+ # 35 MB is normal for recent versions of the installer
+ # Only flag if it's way too large (over 50 MB)
  if ($actualSizeMB -gt 50) {
  Remove-Item $fullPath -Force -ErrorAction SilentlyContinue
- throw "Downloaded file size ($actualSizeMB MB) is suspiciously large for Duo installer (expected 15-30 MB). File deleted for safety."
+ throw "Downloaded file size ($actualSizeMB MB) is suspiciously large for Duo installer (expected 15-50 MB). File deleted for safety."
  }
 
  # Check if file size is reasonable (at least 1 MB, installer should be larger)
