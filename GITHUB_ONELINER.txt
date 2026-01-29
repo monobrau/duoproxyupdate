@@ -1,0 +1,42 @@
+═══════════════════════════════════════════════════════════════
+ONE-LINER COMMANDS TO DOWNLOAD & EXECUTE FROM GITHUB
+═══════════════════════════════════════════════════════════════
+
+POWERSHELL ONE-LINER (Copy & Paste - PowerShell 5.x Compatible):
+───────────────────────────────────────────────────────────────────
+powershell.exe -ExecutionPolicy Bypass -Command "[Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12;(Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/monobrau/duoproxyupdate/main/DuoProxyUpgrade.ps1' -UseBasicParsing).Content|Out-File -FilePath (Join-Path $env:TEMP 'DuoProxyUpgrade.ps1') -Encoding UTF8;& (Join-Path $env:TEMP 'DuoProxyUpgrade.ps1')"
+
+POWERSHELL ONE-LINER (Shorter - Direct Execution - PowerShell 5.x Compatible):
+───────────────────────────────────────────────────────────────────
+powershell.exe -ExecutionPolicy Bypass -Command "[Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12;iex((Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/monobrau/duoproxyupdate/main/DuoProxyUpgrade.ps1' -UseBasicParsing).Content)"
+
+RECOMMENDED (Download to file first - bypasses cache issues - USE THIS ON SERVERS):
+───────────────────────────────────────────────────────────────────
+powershell.exe -ExecutionPolicy Bypass -Command "[Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12;`$f=Join-Path `$env:TEMP DuoProxyUpgrade.ps1;Remove-Item `$f -ErrorAction SilentlyContinue;Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/monobrau/duoproxyupdate/main/DuoProxyUpgrade.ps1' -OutFile `$f -UseBasicParsing;powershell.exe -ExecutionPolicy Bypass -File `$f"
+
+CMD/BATCH ONE-LINER (PowerShell 5.x Compatible):
+───────────────────────────────────────────────────────────────────
+powershell.exe -ExecutionPolicy Bypass -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/monobrau/duoproxyupdate/main/DuoProxyUpgrade.ps1' -OutFile %TEMP%\DuoProxyUpgrade.ps1 -UseBasicParsing; powershell.exe -ExecutionPolicy Bypass -File %TEMP%\DuoProxyUpgrade.ps1"
+
+═══════════════════════════════════════════════════════════════
+USAGE:
+───────────────────────────────────────────────────────────────────
+1. Copy one of the commands above
+2. Paste into PowerShell or CMD prompt
+3. Press Enter
+4. Script downloads and executes automatically
+
+═══════════════════════════════════════════════════════════════
+NOTES:
+───────────────────────────────────────────────────────────────────
+- All commands are compatible with PowerShell 5.1+ (Windows 10/11 default)
+- TLS 1.2 is enabled automatically for GitHub HTTPS connections
+- **RECOMMENDED command** (third one) uses timestamp cache-busting - USE THIS when running on servers
+- Update GitHub URL if repository/branch differs
+- First command downloads to temp folder then executes
+- Second command executes directly from memory (no temp file) - may be cached
+- Third command (RECOMMENDED) downloads with timestamp to bypass cache - best for server use
+- Fourth command works from CMD/Batch files
+- If you get cached/old version, see TROUBLESHOOT_VERSION_DETECTION.md for troubleshooting
+
+═══════════════════════════════════════════════════════════════

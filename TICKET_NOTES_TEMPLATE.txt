@@ -1,0 +1,89 @@
+═══════════════════════════════════════════════════════════════
+DUO PROXY UPGRADE - TICKET NOTES TEMPLATE
+═══════════════════════════════════════════════════════════════
+
+Task - 
+Upgrade Duo Authentication Proxy to latest version.
+
+Step(s) performed - 
+1. Connected to target server via ScreenConnect remote session
+2. Downloaded and executed Duo Proxy Upgrade Helper tool using PowerShell one-liner:
+   powershell.exe -ExecutionPolicy Bypass -Command "[Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12;iex((Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/monobrau/duoproxyupdate/main/DuoProxyUpgrade.ps1' -UseBasicParsing).Content)"
+3. Verified current Duo Proxy version using F3 (Duo Proxy Manager)
+4. Created backup of configuration file using F5 (Backup Config File)
+   - Backup file location: Desktop with timestamp
+   - Verified backup file exists and contains configuration data
+5. Opened Duo downloads page using F4 to download latest installer
+6. Downloaded latest Duo Authentication Proxy installer
+7. Executed installer with default settings
+8. Rebooted server as prompted by installer (if required)
+9. Verified new version installed using F3 (Duo Proxy Manager)
+10. Confirmed backup file still exists on Desktop
+11. Verified Duo Authentication Proxy service is running
+12. Tested authentication functionality
+13. Closed Duo Proxy Upgrade Helper tool
+
+Is the task resolved - 
+Yes - Duo Authentication Proxy successfully upgraded to latest version. Service is running and authentication functionality verified. Configuration backup retained on Desktop for rollback if needed.
+
+═══════════════════════════════════════════════════════════════
+ALTERNATIVE TEMPLATE (If Issues Encountered)
+═══════════════════════════════════════════════════════════════
+
+Task - 
+Upgrade Duo Authentication Proxy to latest version.
+
+Step(s) performed - 
+1. Connected to target server via ScreenConnect remote session
+2. Downloaded and executed Duo Proxy Upgrade Helper tool using PowerShell one-liner
+3. Verified current Duo Proxy version using F3 (Duo Proxy Manager)
+4. Created backup of configuration file using F5 (Backup Config File)
+   - Backup file location: Desktop with timestamp
+5. Opened Duo downloads page using F4
+6. Downloaded latest Duo Authentication Proxy installer
+7. Executed installer with default settings
+8. Issue encountered during upgrade process
+9. Steps taken to address the issue
+10. Verified Duo Authentication Proxy service status
+11. Tested authentication functionality
+
+Is the task resolved - 
+Issue encountered and resolved. Service verified and functioning normally.
+
+═══════════════════════════════════════════════════════════════
+MINIMAL TEMPLATE (Quick Upgrade)
+═══════════════════════════════════════════════════════════════
+
+Task - 
+Upgrade Duo Authentication Proxy to latest version.
+
+Step(s) performed - 
+1. Connected via ScreenConnect and launched Duo Proxy Upgrade Helper
+2. Backed up configuration (F5)
+3. Downloaded and installed latest Duo Proxy version
+4. Rebooted server (if required)
+5. Verified new version and service status
+
+Is the task resolved - 
+Yes - Upgrade completed successfully. Service running. Backup retained.
+
+═══════════════════════════════════════════════════════════════
+ROLLBACK TEMPLATE (If Rollback Required)
+═══════════════════════════════════════════════════════════════
+
+Task - 
+Rollback Duo Authentication Proxy to previous version due to issues encountered.
+
+Step(s) performed - 
+1. Connected to target server via ScreenConnect remote session
+2. Located configuration backup file on Desktop
+3. Stopped Duo Authentication Proxy service
+4. Uninstalled current Duo Proxy version
+5. Installed previous version
+6. Restored configuration from backup file
+7. Restarted Duo Authentication Proxy service
+8. Verified service is running
+9. Tested authentication functionality
+
+Is the task resolved - 
+Yes - Successfully rolled back to previous version. Service running and authentication verified.
