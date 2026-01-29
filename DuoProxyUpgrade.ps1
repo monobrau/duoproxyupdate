@@ -137,11 +137,24 @@ function Open-DuoDownloads {
  # This avoids the "Writing web request stream" dialog issue
  $webClient = New-Object System.Net.WebClient
  $webClient.Headers.Add("User-Agent", "Mozilla/5.0")
+ 
+ # Ensure TLS 1.2 is used (WebClient respects ServicePointManager setting)
+ [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+ 
  try {
  $webClient.DownloadFile($DuoDownloadsURL, $fullPath)
+ } catch {
+ # Get the inner exception for more details
+ $errorMsg = $_.Exception.Message
+ if ($_.Exception.InnerException) {
+ $errorMsg += "`nInner Exception: $($_.Exception.InnerException.Message)"
+ }
+ throw "WebClient download failed: $errorMsg"
  } finally {
+ if ($webClient) {
  $webClient.Dispose()
  $webClient = $null
+ }
  }
 
  # Wait for file handle to be released and file to be fully written
