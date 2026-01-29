@@ -133,28 +133,22 @@ function Open-DuoDownloads {
 
  Show-Notification "Downloading Duo Proxy installer..."
 
- # Use WebClient for clean download without verbose PowerShell output
- # This avoids the "Writing web request stream" dialog issue
- $webClient = New-Object System.Net.WebClient
- $webClient.Headers.Add("User-Agent", "Mozilla/5.0")
- 
- # Ensure TLS 1.2 is used (WebClient respects ServicePointManager setting)
- [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+ # Use Invoke-WebRequest but suppress all output streams to avoid verbose dialog
+ # Redirect all output streams (verbose, debug, information) to null
+ $ProgressPreference = 'SilentlyContinue'
+ $VerbosePreference = 'SilentlyContinue'
+ $DebugPreference = 'SilentlyContinue'
+ $InformationPreference = 'SilentlyContinue'
  
  try {
- $webClient.DownloadFile($DuoDownloadsURL, $fullPath)
- } catch {
- # Get the inner exception for more details
- $errorMsg = $_.Exception.Message
- if ($_.Exception.InnerException) {
- $errorMsg += "`nInner Exception: $($_.Exception.InnerException.Message)"
- }
- throw "WebClient download failed: $errorMsg"
+ # Download with all output suppressed
+ Invoke-WebRequest -Uri $DuoDownloadsURL -OutFile $fullPath -UseBasicParsing -TimeoutSec 300 -ErrorAction Stop 4>&1 5>&1 6>&1 | Out-Null
  } finally {
- if ($webClient) {
- $webClient.Dispose()
- $webClient = $null
- }
+ # Restore preferences (though they're function-scoped)
+ $ProgressPreference = 'Continue'
+ $VerbosePreference = 'Continue'
+ $DebugPreference = 'Continue'
+ $InformationPreference = 'Continue'
  }
 
  # Wait for file handle to be released and file to be fully written
