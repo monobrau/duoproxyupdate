@@ -270,12 +270,20 @@ function Get-DuoProxyInfo {
  ServiceStatus = $null
  }
  
- # Check if service exists
+ # Check if service exists - specifically Duo Authentication Proxy (not Network Gateway or other products)
  try {
  $service = Get-Service -Name "DuoAuthenticationProxy" -ErrorAction SilentlyContinue
  if ($service) {
+ # Verify this is Authentication Proxy, not Network Gateway or other Duo products
+ # Check service display name contains "Authentication Proxy"
+ $displayName = $service.DisplayName
+ if ($displayName -match "Authentication Proxy" -and $displayName -notmatch "Network Gateway") {
  $proxyInfo.IsInstalled = $true
  $proxyInfo.ServiceStatus = $service.Status.ToString()
+ } else {
+ # Service name matches but display name suggests it's not Authentication Proxy
+ # Skip this service to avoid false positives
+ }
  }
  } catch {}
  
@@ -314,6 +322,8 @@ function Get-DuoProxyInfo {
  $serviceObj = Get-WmiObject Win32_Service -Filter "Name='DuoAuthenticationProxy'" -ErrorAction SilentlyContinue
  if ($serviceObj -and $serviceObj.PathName) {
  $servicePath = $serviceObj.PathName
+ # Verify path contains "Authentication Proxy" and not "Network Gateway"
+ if ($servicePath -match "Authentication Proxy" -and $servicePath -notmatch "Network Gateway") {
  # Extract executable path (handle quoted and unquoted paths, with or without arguments)
  if ($servicePath -match '^"([^"]+)"') {
  $exePath = $matches[1]
@@ -324,7 +334,8 @@ function Get-DuoProxyInfo {
  $exePath = ($servicePath -split '\s+')[0]
  }
  
- if ($exePath -and (Test-Path $exePath)) {
+ # Additional validation: ensure executable path contains "Authentication Proxy"
+ if ($exePath -and (Test-Path $exePath) -and $exePath -match "Authentication Proxy" -and $exePath -notmatch "Network Gateway") {
  try {
  $fileInfo = Get-Item $exePath
  if ($fileInfo.VersionInfo.FileVersion) {
@@ -339,13 +350,17 @@ function Get-DuoProxyInfo {
  } catch {}
  }
  }
+ }
  } catch {}
  }
  
  # If still not found, try standard executable file versions
+ # These paths are already validated to be Authentication Proxy paths (not Network Gateway)
  if (-not $proxyInfo.Version) {
  foreach ($exePath in $ProxyExePaths) {
  if (Test-Path $exePath) {
+ # Additional safety check: ensure path contains "Authentication Proxy" not "Network Gateway"
+ if ($exePath -match "Authentication Proxy" -and $exePath -notmatch "Network Gateway") {
  try {
  $fileInfo = Get-Item $exePath
  # Try FileVersion first
@@ -363,6 +378,7 @@ function Get-DuoProxyInfo {
  break
  }
  } catch {}
+ }
  }
  }
  }
@@ -384,12 +400,16 @@ function Get-DuoProxyInfo {
  }
  
  # Check install paths to determine if installed
+ # Verify these are Authentication Proxy paths, not Network Gateway
  if (-not $proxyInfo.IsInstalled) {
  foreach ($path in $InstallPaths) {
  if (Test-Path $path) {
+ # Verify path contains "Authentication Proxy" and not "Network Gateway"
+ if ($path -match "Authentication Proxy" -and $path -notmatch "Network Gateway") {
  $proxyInfo.IsInstalled = $true
  $proxyInfo.InstallPath = $path
  break
+ }
  }
  }
  }
