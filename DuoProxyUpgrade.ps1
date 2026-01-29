@@ -15,8 +15,8 @@ $ConfigPathOld = "C:\Program Files (x86)\Duo Security Authentication Proxy\conf"
 $ConfigPathNew = "C:\Program Files\Duo Security Authentication Proxy\conf"
 $ConfigFile = "authproxy.cfg"
 $DesktopPath = [Environment]::GetFolderPath("Desktop")
-# Duo Authentication Proxy reference page (includes download links and version info)
-$DuoDownloadsURL = "https://duo.com/docs/authproxy-reference"
+# Duo Authentication Proxy direct download link (latest Windows installer)
+$DuoDownloadsURL = "https://dl.duosecurity.com/duoauthproxy-latest.exe"
 
 # Centralized Path Arrays (to avoid duplication)
 $ProxyManagerPaths = @(
@@ -118,10 +118,10 @@ function Open-ProxyManager {
  }
 }
 
-# Function: Open Duo Downloads (Opens Reference Page)
+# Function: Open Duo Downloads (Downloads Installer)
 function Open-DuoDownloads {
  Start-Process $DuoDownloadsURL
- Show-Notification "Opening Duo Authentication Proxy reference page..."
+ Show-Notification "Downloading Duo Proxy installer..."
 }
 
 # Function: Open Duo Extension Request Form
@@ -651,7 +651,7 @@ $buttonY += $buttonSpacing
 
 # Button 4: Download Installer
 $btnDownloads = New-Object System.Windows.Forms.Button
-$btnDownloads.Text = "F4: Open Duo Auth Proxy Reference"
+$btnDownloads.Text = "F4: Download Duo Proxy Installer"
 $btnDownloads.Location = New-Object System.Drawing.Point(20, $buttonY)
 $btnDownloads.Size = New-Object System.Drawing.Size(360, $buttonHeight)
 $btnDownloads.Font = New-Object System.Drawing.Font("Segoe UI", 9)
