@@ -63,8 +63,7 @@ Quick shortcuts and automation tools for Duo Authentication Proxy upgrade tasks,
 
 - **`DuoProxyUpgrade.ps1`** - PowerShell GUI version (recommended)
 - **`Run-DuoHelper.bat`** - Simple launcher for PowerShell script
-- **`DuoProxyUpgrade.ahk`** - AutoHotkey v2 source (legacy)
-- **`compile.bat`** - Compiler for AutoHotkey version
+- **`DuoProxyUpgrade.ahk`** - AutoHotkey v2 source (legacy, reference only)
 
 ## Documentation
 
@@ -83,7 +82,6 @@ Quick shortcuts and automation tools for Duo Authentication Proxy upgrade tasks,
 ## Requirements
 
 - **PowerShell Version**: Windows PowerShell 5.1+ (default on Windows 10/11)
-- **AutoHotkey Version**: AutoHotkey v2 (for compilation)
 
 ## License
 
