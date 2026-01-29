@@ -118,11 +118,11 @@ function Open-ProxyManager {
  }
 }
 
-# Function: Open Duo Downloads (Downloads Installer)
+# Function: Open Duo Downloads (Downloads and Runs Installer)
 function Open-DuoDownloads {
  try {
- # Download directly to user's Downloads folder
- $downloadPath = [Environment]::GetFolderPath("UserProfile") + "\Downloads"
+ # Download to temp folder for automatic execution
+ $downloadPath = $env:TEMP
  $fileName = "duoauthproxy-latest.exe"
  $fullPath = Join-Path $downloadPath $fileName
  
@@ -136,15 +136,18 @@ function Open-DuoDownloads {
  # Download the file
  Invoke-WebRequest -Uri $DuoDownloadsURL -OutFile $fullPath -UseBasicParsing -ErrorAction Stop
  
- Show-Notification "Download complete: $fileName"
+ Show-Notification "Download complete. Starting installer..."
  [System.Console]::Beep(600, 150)
  
- # Open the Downloads folder
- Start-Process explorer.exe -ArgumentList "`"$downloadPath`""
+ # Wait a moment for file to be fully written
+ Start-Sleep -Milliseconds 500
+ 
+ # Automatically execute the installer
+ Start-Process -FilePath $fullPath -ErrorAction Stop
  } catch {
  [System.Windows.Forms.MessageBox]::Show(
- "Error downloading installer:`n$($_.Exception.Message)`n`nTried URL: $DuoDownloadsURL",
- "Download Failed",
+ "Error downloading or running installer:`n$($_.Exception.Message)`n`nTried URL: $DuoDownloadsURL",
+ "Download/Run Failed",
  [System.Windows.Forms.MessageBoxButtons]::OK,
  [System.Windows.Forms.MessageBoxIcon]::Error
  )
@@ -678,7 +681,7 @@ $buttonY += $buttonSpacing
 
 # Button 4: Download Installer
 $btnDownloads = New-Object System.Windows.Forms.Button
-$btnDownloads.Text = "F4: Download Installer (duoauthproxy-latest.exe)"
+$btnDownloads.Text = "F4: Download & Run Installer (duoauthproxy-latest.exe)"
 $btnDownloads.Location = New-Object System.Drawing.Point(20, $buttonY)
 $btnDownloads.Size = New-Object System.Drawing.Size(360, $buttonHeight)
 $btnDownloads.Font = New-Object System.Drawing.Font("Segoe UI", 9)
