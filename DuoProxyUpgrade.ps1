@@ -133,22 +133,72 @@ function Open-DuoDownloads {
 
  Show-Notification "Downloading Duo Proxy installer..."
 
- # Use Invoke-WebRequest but suppress all output streams to avoid verbose dialog
- # Redirect all output streams (verbose, debug, information) to null
+ # Show and initialize progress bar
+ if ($script:ProgressBar) {
+ $script:ProgressBar.Visible = $true
+ $script:ProgressBar.Value = 0
+ $form.Refresh()
+ }
+
+ # Use WebClient with progress event for GUI updates
+ $webClient = New-Object System.Net.WebClient
+ $webClient.Headers.Add("User-Agent", "Mozilla/5.0")
+ 
+ # Get expected file size first (if available)
+ $expectedSize = $null
+ try {
+ $headRequest = Invoke-WebRequest -Uri $DuoDownloadsURL -Method Head -UseBasicParsing -TimeoutSec 10 -ErrorAction SilentlyContinue
+ if ($headRequest.Headers.'Content-Length') {
+ $expectedSize = [long]$headRequest.Headers.'Content-Length'
+ if ($script:ProgressBar) {
+ $script:ProgressBar.Maximum = 100
+ }
+ }
+ } catch {
+ # If HEAD fails, we'll estimate progress by file size
+ }
+
+ # Add progress event handler
+ $webClient.add_DownloadProgressChanged({
+ param($sender, $e)
+ if ($script:ProgressBar) {
+ $percent = $e.ProgressPercentage
+ $script:ProgressBar.Value = [math]::Min($percent, 100)
+ $bytesReceived = $e.BytesReceived
+ $totalBytes = $e.TotalBytesToReceive
+ if ($totalBytes -gt 0) {
+ $mbReceived = [math]::Round($bytesReceived / 1MB, 1)
+ $mbTotal = [math]::Round($totalBytes / 1MB, 1)
+ $script:NotifyLabel.Text = "Downloading: $mbReceived MB / $mbTotal MB ($percent%)"
+ } else {
+ $script:NotifyLabel.Text = "Downloading: $([math]::Round($bytesReceived / 1MB, 1)) MB..."
+ }
+ $form.Refresh()
+ }
+ })
+ 
+ # Suppress console output
  $ProgressPreference = 'SilentlyContinue'
  $VerbosePreference = 'SilentlyContinue'
  $DebugPreference = 'SilentlyContinue'
  $InformationPreference = 'SilentlyContinue'
  
  try {
- # Download with all output suppressed
- Invoke-WebRequest -Uri $DuoDownloadsURL -OutFile $fullPath -UseBasicParsing -TimeoutSec 300 -ErrorAction Stop 4>&1 5>&1 6>&1 | Out-Null
+ # Download with progress updates
+ $webClient.DownloadFile($DuoDownloadsURL, $fullPath)
  } finally {
- # Restore preferences (though they're function-scoped)
+ $webClient.Dispose()
+ $webClient = $null
+ # Restore preferences
  $ProgressPreference = 'Continue'
  $VerbosePreference = 'Continue'
  $DebugPreference = 'Continue'
  $InformationPreference = 'Continue'
+ # Hide progress bar
+ if ($script:ProgressBar) {
+ $script:ProgressBar.Visible = $false
+ $script:ProgressBar.Value = 0
+ }
  }
 
  # Wait for file handle to be released and file to be fully written
@@ -690,13 +740,24 @@ $script:NotifyLabel.Size = New-Object System.Drawing.Size(370, 20)
 $script:NotifyLabel.TextAlign = [System.Drawing.ContentAlignment]::MiddleCenter
 $form.Controls.Add($script:NotifyLabel)
 
+# Progress Bar (initially hidden)
+$script:ProgressBar = New-Object System.Windows.Forms.ProgressBar
+$script:ProgressBar.Location = New-Object System.Drawing.Point(10, 85)
+$script:ProgressBar.Size = New-Object System.Drawing.Size(370, 23)
+$script:ProgressBar.Style = [System.Windows.Forms.ProgressBarStyle]::Continuous
+$script:ProgressBar.Minimum = 0
+$script:ProgressBar.Maximum = 100
+$script:ProgressBar.Value = 0
+$script:ProgressBar.Visible = $false
+$form.Controls.Add($script:ProgressBar)
+
 # Notification Timer
 $script:NotifyTimer = New-Object System.Windows.Forms.Timer
 $script:NotifyTimer.Interval = 3000
 $script:NotifyTimer.Add_Tick({ Clear-Notification })
 
-# Buttons
-$buttonY = 90
+# Buttons (adjusted for progress bar)
+$buttonY = 115
 $buttonHeight = 40
 $buttonSpacing = 50
 
