@@ -120,8 +120,35 @@ function Open-ProxyManager {
 
 # Function: Open Duo Downloads (Downloads Installer)
 function Open-DuoDownloads {
- Start-Process $DuoDownloadsURL
+ try {
+ # Download directly to user's Downloads folder
+ $downloadPath = [Environment]::GetFolderPath("UserProfile") + "\Downloads"
+ $fileName = "duoauthproxy-latest.exe"
+ $fullPath = Join-Path $downloadPath $fileName
+ 
+ # Remove existing file if present
+ if (Test-Path $fullPath) {
+ Remove-Item $fullPath -Force -ErrorAction SilentlyContinue
+ }
+ 
  Show-Notification "Downloading Duo Proxy installer..."
+ 
+ # Download the file
+ Invoke-WebRequest -Uri $DuoDownloadsURL -OutFile $fullPath -UseBasicParsing -ErrorAction Stop
+ 
+ Show-Notification "Download complete: $fileName"
+ [System.Console]::Beep(600, 150)
+ 
+ # Open the Downloads folder
+ Start-Process explorer.exe -ArgumentList "`"$downloadPath`""
+ } catch {
+ [System.Windows.Forms.MessageBox]::Show(
+ "Error downloading installer:`n$($_.Exception.Message)`n`nTried URL: $DuoDownloadsURL",
+ "Download Failed",
+ [System.Windows.Forms.MessageBoxButtons]::OK,
+ [System.Windows.Forms.MessageBoxIcon]::Error
+ )
+ }
 }
 
 # Function: Open Duo Extension Request Form
