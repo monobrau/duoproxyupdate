@@ -66,11 +66,12 @@ Quick shortcuts and automation tools for Duo Authentication Proxy upgrade tasks,
 
 ## Documentation
 
-- **`README_POWERSHELL.md`** - Detailed PowerShell version documentation
 - **`SCREENCONNECT_DEPLOYMENT.md`** - Step-by-step ScreenConnect guide
 - **`SCREENCONNECT_CHECKLIST.txt`** - Printable upgrade checklist
 - **`QUICK_START_SCREENCONNECT.txt`** - Quick reference card
 - **`QUICK_REFERENCE.txt`** - Hotkey reference
+- **`TROUBLESHOOT_VERSION_DETECTION.md`** - Troubleshooting version detection issues
+- **`CLEAR_CACHE.md`** - How to clear cache for script updates
 
 ## Usage Workflow
 
