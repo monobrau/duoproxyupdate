@@ -133,15 +133,8 @@ function Open-DuoDownloads {
 
  Show-Notification "Downloading Duo Proxy installer..."
 
- # Use WebClient instead of Invoke-WebRequest to avoid verbose "Writing web request stream" output
- # This method doesn't show the verbose PowerShell output that was interfering
- $webClient = New-Object System.Net.WebClient
- $webClient.Headers.Add("User-Agent", "Mozilla/5.0")
- try {
- $webClient.DownloadFile($DuoDownloadsURL, $fullPath)
- } finally {
- $webClient.Dispose()
- }
+ # Download the file
+ Invoke-WebRequest -Uri $DuoDownloadsURL -OutFile $fullPath -UseBasicParsing -ErrorAction Stop
 
  Show-Notification "Download complete. Starting installer..."
  [System.Console]::Beep(600, 150)
