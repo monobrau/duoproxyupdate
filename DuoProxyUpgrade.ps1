@@ -133,22 +133,19 @@ function Open-DuoDownloads {
 
  Show-Notification "Downloading Duo Proxy installer..."
 
- # Suppress all verbose output that causes "Writing web request stream" dialog
- $oldProgressPreference = $ProgressPreference
- $oldVerbosePreference = $VerbosePreference
- $oldDebugPreference = $DebugPreference
- $ProgressPreference = 'SilentlyContinue'
- $VerbosePreference = 'SilentlyContinue'
- $DebugPreference = 'SilentlyContinue'
-
- try {
- # Download the file - redirect all output to null to prevent verbose messages
- Invoke-WebRequest -Uri $DuoDownloadsURL -OutFile $fullPath -UseBasicParsing -ErrorAction Stop 4>&1 5>&1 6>&1 | Out-Null
- } finally {
- # Restore preferences
- $ProgressPreference = $oldProgressPreference
- $VerbosePreference = $oldVerbosePreference
- $DebugPreference = $oldDebugPreference
+ # Use BITS (Background Intelligent Transfer Service) for clean download without verbose output
+ # BITS doesn't show the "Writing web request stream" dialog that was causing issues
+ $bitsJob = Start-BitsTransfer -Source $DuoDownloadsURL -Destination $fullPath -Asynchronous -ErrorAction Stop
+ 
+ # Wait for download to complete
+ do {
+ Start-Sleep -Milliseconds 500
+ $bitsJob = Get-BitsTransfer -JobId $bitsJob.JobId -ErrorAction SilentlyContinue
+ } while ($bitsJob -and $bitsJob.TransferStatus -eq 'Transferring')
+ 
+ # Complete the BITS job
+ if ($bitsJob) {
+ Complete-BitsTransfer -BitsJob $bitsJob -ErrorAction Stop
  }
 
  Show-Notification "Download complete. Starting installer..."
