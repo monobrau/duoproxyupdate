@@ -426,7 +426,7 @@ function Get-TicketNotesTemplate {
  
  # Always try to download from GitHub first (ensures latest version)
  try {
- $url = "https://raw.githubusercontent.com/monobrau/windows-network-config/main/duoproxyupdate/TICKET_NOTES.txt"
+ $url = "https://raw.githubusercontent.com/monobrau/duoproxyupdate/main/TICKET_NOTES.txt"
  $content = (Invoke-WebRequest -Uri $url -UseBasicParsing).Content
  $content | Out-File -FilePath $notesFile -Encoding UTF8 -Force
  } catch {
