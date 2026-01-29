@@ -287,7 +287,7 @@ function Get-DuoProxyInfo {
  }
  } catch {}
  
- # Try to get version from registry
+ # Try to get version from registry - specifically Authentication Proxy registry keys
  $regPaths = @(
  "HKLM:\SOFTWARE\Duo Security\Authentication Proxy",
  "HKLM:\SOFTWARE\WOW6432Node\Duo Security\Authentication Proxy"
@@ -295,8 +295,18 @@ function Get-DuoProxyInfo {
  
  foreach ($regPath in $regPaths) {
  if (Test-Path $regPath) {
+ # Verify registry path is for Authentication Proxy, not Network Gateway
+ if ($regPath -match "Authentication Proxy" -and $regPath -notmatch "Network Gateway") {
  try {
  $regProps = Get-ItemProperty -Path $regPath -ErrorAction SilentlyContinue
+ # Additional validation: check InstallPath if present to ensure it's Authentication Proxy
+ $isValid = $true
+ if ($regProps.InstallPath) {
+ if ($regProps.InstallPath -notmatch "Authentication Proxy" -or $regProps.InstallPath -match "Network Gateway") {
+ $isValid = $false
+ }
+ }
+ if ($isValid) {
  if ($regProps.Version) {
  $proxyInfo.Version = $regProps.Version
  if ($regProps.InstallPath) {
@@ -311,7 +321,9 @@ function Get-DuoProxyInfo {
  }
  break
  }
+ }
  } catch {}
+ }
  }
  }
  
