@@ -125,28 +125,37 @@ function Open-DuoDownloads {
  $downloadPath = $env:TEMP
  $fileName = "duoauthproxy-latest.exe"
  $fullPath = Join-Path $downloadPath $fileName
- 
+
  # Remove existing file if present
  if (Test-Path $fullPath) {
  Remove-Item $fullPath -Force -ErrorAction SilentlyContinue
  }
- 
+
  Show-Notification "Downloading Duo Proxy installer..."
- 
- # Download the file
- Invoke-WebRequest -Uri $DuoDownloadsURL -OutFile $fullPath -UseBasicParsing -ErrorAction Stop
- 
+
+ # Download the file with progress indication and timeout
+ $ProgressPreference = 'Continue'
+ try {
+ Write-Progress -Activity "Downloading Duo Proxy Installer" -Status "Connecting..." -PercentComplete 0
+ Invoke-WebRequest -Uri $DuoDownloadsURL -OutFile $fullPath -UseBasicParsing -TimeoutSec 300 -ErrorAction Stop
+ Write-Progress -Activity "Downloading Duo Proxy Installer" -Status "Complete" -PercentComplete 100 -Completed
+ } catch {
+ Write-Progress -Activity "Downloading Duo Proxy Installer" -Completed
+ throw
+ }
+
  Show-Notification "Download complete. Starting installer..."
  [System.Console]::Beep(600, 150)
- 
+
  # Wait a moment for file to be fully written
  Start-Sleep -Milliseconds 500
- 
+
  # Automatically execute the installer
  Start-Process -FilePath $fullPath -ErrorAction Stop
  } catch {
+ Write-Progress -Activity "Downloading Duo Proxy Installer" -Completed -ErrorAction SilentlyContinue
  [System.Windows.Forms.MessageBox]::Show(
- "Error downloading or running installer:`n$($_.Exception.Message)`n`nTried URL: $DuoDownloadsURL",
+ "Error downloading or running installer:`n$($_.Exception.Message)`n`nTried URL: $DuoDownloadsURL`n`nIf download timed out, check your internet connection and try again.",
  "Download/Run Failed",
  [System.Windows.Forms.MessageBoxButtons]::OK,
  [System.Windows.Forms.MessageBoxIcon]::Error
