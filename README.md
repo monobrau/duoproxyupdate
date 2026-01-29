@@ -10,6 +10,8 @@ Quick shortcuts and automation tools for Duo Authentication Proxy upgrade tasks,
 
 #### Option 1: Run Directly from GitHub (Easiest)
 
+**Note:** This only works if the repository is **public**. For private repos, use Option 2 or clone the repo first.
+
 Copy and paste this into PowerShell on the remote server:
 
 ```powershell
