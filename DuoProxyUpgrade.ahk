@@ -12,7 +12,8 @@ ConfigPathOld := "C:\Program Files (x86)\Duo Security Authentication Proxy\conf"
 ConfigPathNew := "C:\Program Files\Duo Security Authentication Proxy\conf"
 ConfigFile := "authproxy.cfg"
 DesktopPath := A_Desktop
-DuoDownloadsURL := "https://duo.com/docs/checksums"
+; Duo Authentication Proxy download/reference (not generic checksums page)
+DuoDownloadsURL := "https://duo.com/docs/authproxy-reference"
 ProxyManagerExe := "C:\Program Files\Duo Security Authentication Proxy\DuoAuthenticationProxyManager.exe"
 
 ; ============================================
