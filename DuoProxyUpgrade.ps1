@@ -678,7 +678,7 @@ $buttonY += $buttonSpacing
 
 # Button 4: Download Installer
 $btnDownloads = New-Object System.Windows.Forms.Button
-$btnDownloads.Text = "F4: Download Duo Proxy Installer"
+$btnDownloads.Text = "F4: Download Installer (duoauthproxy-latest.exe)"
 $btnDownloads.Location = New-Object System.Drawing.Point(20, $buttonY)
 $btnDownloads.Size = New-Object System.Drawing.Size(360, $buttonHeight)
 $btnDownloads.Font = New-Object System.Drawing.Font("Segoe UI", 9)
