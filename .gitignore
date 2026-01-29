@@ -1,9 +1,6 @@
 # Compiled executables
 *.exe
 
-# AutoHotkey compiled files
-*.ahk.bak
-
 # Windows
 Thumbs.db
 Desktop.ini

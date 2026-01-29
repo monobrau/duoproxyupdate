@@ -12,7 +12,7 @@
 3. **Use** the GUI buttons or F1-F6 keyboard shortcuts
 4. **Close** window when done
 
-## Why PowerShell Instead of AutoHotkey?
+## Why PowerShell?
 
 - ✅ **Native Windows** - No compilation, no external dependencies
 - ✅ **SentinelOne Safe** - Won't trigger EDR/antivirus alerts
@@ -78,10 +78,10 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
 - Script automatically checks both old and new paths
 - Verify Duo Proxy is installed on the server
 
-## Advantages Over Compiled Exe
+## Advantages
 
 - ✅ No false positives from SentinelOne/EDR
-- ✅ No need to compile or maintain executables
+- ✅ No compilation needed - just run the script
 - ✅ Easy to modify/customize
 - ✅ Transparent - admins can review the code
 - ✅ Works on all Windows systems with PowerShell

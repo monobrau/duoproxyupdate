@@ -1,5 +1,5 @@
 ═══════════════════════════════════════════════════════════════
-  DUO PROXY UPGRADE - AUTOHOTKEY QUICK REFERENCE
+  DUO PROXY UPGRADE - QUICK REFERENCE
 ═══════════════════════════════════════════════════════════════
 
 HOTKEYS:
@@ -35,14 +35,5 @@ New (5.6.0+):
   C:\Program Files\Duo Security Authentication Proxy\conf
 
 Config File: authproxy.cfg
-
-───────────────────────────────────────────────────────────────
-
-TRAY MENU:
-───────────────────────────────────────────────────────────────
-Right-click system tray icon for:
-  • Show Hotkeys
-  • About
-  • Exit
 
 ═══════════════════════════════════════════════════════════════

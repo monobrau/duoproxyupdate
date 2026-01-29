@@ -14,16 +14,6 @@ RECOMMENDED: PowerShell Version (SentinelOne Safe)
 
 ═══════════════════════════════════════════════════════════════
 
-ALTERNATIVE: AutoHotkey Version (May trigger SentinelOne)
-───────────────────────────────────────────────────────────────
-
-1. Transfer DuoProxyUpgrade.exe to server via ScreenConnect
-2. Run DuoProxyUpgrade.exe
-3. Use F1-F6 shortcuts
-4. Right-click tray icon → Exit when done
-
-═══════════════════════════════════════════════════════════════
-
 POWERSHELL FEATURES:
 ───────────────────────────────────────────────────────────────
 ✓ GUI window with buttons

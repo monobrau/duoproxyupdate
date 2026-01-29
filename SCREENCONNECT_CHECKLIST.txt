@@ -4,11 +4,10 @@
 
 BEFORE STARTING:
 ───────────────────────────────────────────────────────────────
-☐ Compiled DuoProxyUpgrade.exe on local machine
 ☐ Connected to target server via ScreenConnect
-☐ Transferred DuoProxyUpgrade.exe to server Desktop
-☐ Started DuoProxyUpgrade.exe on remote server
-☐ Verified tray icon appears in remote session
+☐ Transferred DuoProxyUpgrade.ps1 to server Desktop
+☐ Started DuoProxyUpgrade.ps1 on remote server
+☐ Verified GUI window appears in remote session
 
 PRE-UPGRADE:
 ───────────────────────────────────────────────────────────────
@@ -32,9 +31,9 @@ POST-UPGRADE:
 
 CLEANUP:
 ───────────────────────────────────────────────────────────────
-☐ Right-click tray icon → Exit DuoProxyUpgrade.exe
+☐ Close DuoProxyUpgrade GUI window
 ☐ Keep backup file on Desktop (for rollback if needed)
-☐ Optional: Delete DuoProxyUpgrade.exe or keep for future use
+☐ Optional: Delete DuoProxyUpgrade.ps1 or keep for future use
 
 ═══════════════════════════════════════════════════════════════
 
