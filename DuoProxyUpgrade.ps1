@@ -141,13 +141,16 @@ function Open-DuoDownloads {
  $webClient.DownloadFile($DuoDownloadsURL, $fullPath)
  } finally {
  $webClient.Dispose()
+ $webClient = $null
  }
+
+ # Wait for file handle to be released and file to be fully written
+ Start-Sleep -Seconds 1
+ [System.GC]::Collect()
+ [System.GC]::WaitForPendingFinalizers()
 
  Show-Notification "Download complete. Starting installer..."
  [System.Console]::Beep(600, 150)
-
- # Wait a moment for file to be fully written
- Start-Sleep -Milliseconds 500
 
  # Automatically execute the installer
  Start-Process -FilePath $fullPath -ErrorAction Stop
