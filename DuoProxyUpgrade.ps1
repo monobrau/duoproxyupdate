@@ -261,7 +261,9 @@ function Clear-Notification {
  }
 }
 
-# Function: Detect Duo Proxy Installation and Version
+# Function: Detect Duo Authentication Proxy Installation and Version
+# Specifically detects Duo Authentication Proxy (not Duo Network Gateway or other Duo products)
+# Validates service names, registry paths, and file paths contain "Authentication Proxy" and exclude "Network Gateway"
 function Get-DuoProxyInfo {
  $proxyInfo = @{
  IsInstalled = $false
