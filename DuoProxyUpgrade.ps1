@@ -133,8 +133,23 @@ function Open-DuoDownloads {
 
  Show-Notification "Downloading Duo Proxy installer..."
 
- # Download the file
- Invoke-WebRequest -Uri $DuoDownloadsURL -OutFile $fullPath -UseBasicParsing -ErrorAction Stop
+ # Suppress all verbose output that causes "Writing web request stream" dialog
+ $oldProgressPreference = $ProgressPreference
+ $oldVerbosePreference = $VerbosePreference
+ $oldDebugPreference = $DebugPreference
+ $ProgressPreference = 'SilentlyContinue'
+ $VerbosePreference = 'SilentlyContinue'
+ $DebugPreference = 'SilentlyContinue'
+
+ try {
+ # Download the file - redirect all output to null to prevent verbose messages
+ Invoke-WebRequest -Uri $DuoDownloadsURL -OutFile $fullPath -UseBasicParsing -ErrorAction Stop 4>&1 5>&1 6>&1 | Out-Null
+ } finally {
+ # Restore preferences
+ $ProgressPreference = $oldProgressPreference
+ $VerbosePreference = $oldVerbosePreference
+ $DebugPreference = $oldDebugPreference
+ }
 
  Show-Notification "Download complete. Starting installer..."
  [System.Console]::Beep(600, 150)
