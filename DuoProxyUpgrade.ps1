@@ -133,8 +133,16 @@ function Open-DuoDownloads {
 
  Show-Notification "Downloading Duo Proxy installer..."
 
- # Download the file (simple and straightforward)
- Invoke-WebRequest -Uri $DuoDownloadsURL -OutFile $fullPath -UseBasicParsing -TimeoutSec 300 -ErrorAction Stop
+ # Suppress verbose output and download the file
+ $ProgressPreference = 'SilentlyContinue'
+ $VerbosePreference = 'SilentlyContinue'
+ 
+ try {
+ Invoke-WebRequest -Uri $DuoDownloadsURL -OutFile $fullPath -UseBasicParsing -TimeoutSec 300 -ErrorAction Stop | Out-Null
+ } finally {
+ $ProgressPreference = 'Continue'
+ $VerbosePreference = 'Continue'
+ }
 
  Show-Notification "Download complete. Starting installer..."
  [System.Console]::Beep(600, 150)
