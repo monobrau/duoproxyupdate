@@ -131,122 +131,12 @@ function Open-DuoDownloads {
  Remove-Item $fullPath -Force -ErrorAction SilentlyContinue
  }
 
- Show-Notification "Checking download size..."
-
- # First, check the expected file size to prevent runaway downloads
- $maxFileSizeMB = 100  # Maximum expected file size in MB (safety limit)
- $maxFileSizeBytes = $maxFileSizeMB * 1024 * 1024
- 
- try {
- $headRequest = Invoke-WebRequest -Uri $DuoDownloadsURL -Method Head -UseBasicParsing -TimeoutSec 30 -ErrorAction Stop
- $contentLength = $headRequest.Headers.'Content-Length'
- 
- if ($contentLength) {
- $expectedSizeMB = [math]::Round([long]$contentLength / 1MB, 2)
- if ([long]$contentLength -gt $maxFileSizeBytes) {
- throw "File size ($expectedSizeMB MB) exceeds maximum allowed size ($maxFileSizeMB MB). Download aborted for safety."
- }
- Show-Notification "Downloading Duo Proxy installer ($expectedSizeMB MB)..."
- } else {
  Show-Notification "Downloading Duo Proxy installer..."
- }
- } catch {
- # If HEAD request fails, proceed with download but monitor file size
- Show-Notification "Downloading Duo Proxy installer..."
- }
 
- # Download the file with progress indication and timeout
- # Use a background job to monitor file size during download
- $ProgressPreference = 'Continue'
- $monitorJob = $null
- try {
- Write-Progress -Activity "Downloading Duo Proxy Installer" -Status "Connecting..." -PercentComplete 0
- 
- # Start monitoring job to check file size during download
- $monitorScript = {
- param($FilePath, $MaxSizeBytes)
- $checkInterval = 1  # Check every second
- $lastSize = 0
- $stallCount = 0
- $maxStalls = 5  # If size doesn't change for 5 seconds, something's wrong
- 
- while ($true) {
- Start-Sleep -Seconds $checkInterval
- if (Test-Path $FilePath) {
- $currentSize = (Get-Item $FilePath).Length
- if ($currentSize -gt $MaxSizeBytes) {
- Write-Output "EXCEEDED:$currentSize"
- break
- }
- if ($currentSize -eq $lastSize) {
- $stallCount++
- if ($stallCount -ge $maxStalls) {
- Write-Output "STALLED"
- break
- }
- } else {
- $stallCount = 0
- }
- $lastSize = $currentSize
- }
- }
- }
- 
- $monitorJob = Start-Job -ScriptBlock $monitorScript -ArgumentList $fullPath, $maxFileSizeBytes
- 
- # Perform the download
- $response = Invoke-WebRequest -Uri $DuoDownloadsURL -OutFile $fullPath -UseBasicParsing -TimeoutSec 300 -ErrorAction Stop
- Stop-Job $monitorJob -ErrorAction SilentlyContinue
- Remove-Job $monitorJob -ErrorAction SilentlyContinue
- Write-Progress -Activity "Downloading Duo Proxy Installer" -Status "Complete" -PercentComplete 100 -Completed
- } catch {
- if ($monitorJob) {
- Stop-Job $monitorJob -ErrorAction SilentlyContinue
- $monitorResult = Receive-Job $monitorJob -ErrorAction SilentlyContinue
- Remove-Job $monitorJob -ErrorAction SilentlyContinue
- if ($monitorResult -match "EXCEEDED:(\d+)") {
- $exceededSize = [long]$matches[1]
- $exceededSizeMB = [math]::Round($exceededSize / 1MB, 2)
- Remove-Item $fullPath -Force -ErrorAction SilentlyContinue
- throw "Download exceeded maximum size during transfer ($exceededSizeMB MB). Download aborted and file deleted."
- }
- }
- Write-Progress -Activity "Downloading Duo Proxy Installer" -Completed
- throw
- }
+ # Download the file (simple and straightforward)
+ Invoke-WebRequest -Uri $DuoDownloadsURL -OutFile $fullPath -UseBasicParsing -TimeoutSec 300 -ErrorAction Stop
 
- # Verify file was downloaded and check size
- # Wait a moment for file handle to be released after download completes
- Start-Sleep -Milliseconds 1000
- 
- if (-not (Test-Path $fullPath)) {
- throw "Download failed - file not found at $fullPath"
- }
-
- $actualSize = (Get-Item $fullPath).Length
- $actualSizeMB = [math]::Round($actualSize / 1MB, 2)
-
- # Safety check: if file is suspiciously large, abort
- if ($actualSize -gt $maxFileSizeBytes) {
- Remove-Item $fullPath -Force -ErrorAction SilentlyContinue
- throw "Downloaded file size ($actualSizeMB MB) exceeds maximum allowed size ($maxFileSizeMB MB). File deleted for safety."
- }
-
- # Check if file size is reasonable for Duo installer (typically 15-50 MB)
- # 35 MB is normal for recent versions of the installer
- # Only flag if it's way too large (over 50 MB)
- if ($actualSizeMB -gt 50) {
- Remove-Item $fullPath -Force -ErrorAction SilentlyContinue
- throw "Downloaded file size ($actualSizeMB MB) is suspiciously large for Duo installer (expected 15-50 MB). File deleted for safety."
- }
-
- # Check if file size is reasonable (at least 1 MB, installer should be larger)
- if ($actualSize -lt 1MB) {
- Remove-Item $fullPath -Force -ErrorAction SilentlyContinue
- throw "Downloaded file is too small ($actualSizeMB MB). This may indicate a download error. File deleted."
- }
-
- Show-Notification "Download complete ($actualSizeMB MB). Starting installer..."
+ Show-Notification "Download complete. Starting installer..."
  [System.Console]::Beep(600, 150)
 
  # Wait a moment for file to be fully written
@@ -255,9 +145,8 @@ function Open-DuoDownloads {
  # Automatically execute the installer
  Start-Process -FilePath $fullPath -ErrorAction Stop
  } catch {
- Write-Progress -Activity "Downloading Duo Proxy Installer" -Completed -ErrorAction SilentlyContinue
  [System.Windows.Forms.MessageBox]::Show(
- "Error downloading or running installer:`n$($_.Exception.Message)`n`nTried URL: $DuoDownloadsURL`n`nIf download keeps running, cancel and check your internet connection.",
+ "Error downloading or running installer:`n$($_.Exception.Message)`n`nTried URL: $DuoDownloadsURL",
  "Download/Run Failed",
  [System.Windows.Forms.MessageBoxButtons]::OK,
  [System.Windows.Forms.MessageBoxIcon]::Error
