@@ -1,5 +1,7 @@
 # Duo Authentication Proxy Upgrade Helper
 
+**Repository:** [https://github.com/monobrau/duoproxyupdate](https://github.com/monobrau/duoproxyupdate)
+
 Quick shortcuts and automation tools for Duo Authentication Proxy upgrade tasks, designed for remote server access via ScreenConnect.
 
 ## 🚀 Quick Start
